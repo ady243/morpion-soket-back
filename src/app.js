@@ -4,9 +4,12 @@ import helmet from "helmet"
 import xss from "xss-clean"
 import hpp from "hpp"
 import cors from "cors"
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 import userRoutes from "./routes/user.routes.js"
-
+import chatRoute from "./routes/chat.routes.js"
+import messageRoute from "./routes/message.routes.js"
 
 import globalErrHandler from "./controllers/error.controller.js"
 import AppError from "./utils/appError.js"
@@ -14,10 +17,28 @@ import AppError from "./utils/appError.js"
 
 const app = express()
 
+// Options pour la documentation Swagger
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: 'API temps réel socket',
+      version: '1.0.0',
+      description: 'Description de l\'API',
+    },
+    servers: ['http://localhost:4000'],
+  },
+  apis: ['./src/routes/*.js'],
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 // Allow Cross-Origin requests
 app.use(cors({
-  origin:
-      "http://localhost:5173"
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+
 }))
 
 // Set security HTTP headers
@@ -28,7 +49,6 @@ const limiter = rateLimit({
   max: 2000,
   windowMs: 60 * 60 * 1000,
   message: "Too Many Request from this IP, please try again in an hour",
-  // eslint-disable-next-line no-unused-vars
   handler: (req, res, next) => {
     res.status(500).send({
       message: "Too Many Request from this IP, please try again in an hour",
@@ -61,8 +81,8 @@ app.get("/", async (req, res) => {
   })
 })
 app.use("/api/users", userRoutes)
-
-
+app.use("/api/chats", chatRoute)
+app.use("/api/messages", messageRoute)
 
 // handle undefined Routes
 app.use("*", (req, res, next) => {
@@ -72,4 +92,4 @@ app.use("*", (req, res, next) => {
 
 app.use(globalErrHandler)
 
-export default app
+export default app    

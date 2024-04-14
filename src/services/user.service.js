@@ -9,7 +9,7 @@ import MailService from "./email.service.js";
 
 
 export const findOneByField = async (field, value) => {
-  const user = await User.query().where(field, value).first();
+  const user = await User.findOne({ [field]: value });
   return user;
 };
 
@@ -89,7 +89,8 @@ export const createOne = async (user) => {
 
     delete user.password
 
-    const newUser = await User.query().insertAndFetch(user);
+    // const newUser = await User.query().insertAndFetch(user);
+    const newUser = await new User(user).save();
 
    MailService.sendMail(
       newUser.email,
@@ -106,7 +107,7 @@ export const createOne = async (user) => {
 
 export const confirmEmailUser = async (token) => {
   try {
-    const user = await User.query().findOne({ validateToken: token });
+    const user = await User.findOne({ validateToken: token });
 
     if (!user) {
       throw new AppError(404, "fail", "User not found");
@@ -114,7 +115,7 @@ export const confirmEmailUser = async (token) => {
 
     user.validateToken = ""
 
-    const newUser = await User.query().patchAndFetchById(user.id, user)
+    const newUser = await User.findByIdAndUpdate(user.id, user, { new: true });
     
 
     return newUser;
@@ -122,7 +123,6 @@ export const confirmEmailUser = async (token) => {
     throw error;
   }
 };
-
 
 export const findOneById = async (userId) => {
   try {

@@ -1,40 +1,34 @@
-import { Model } from "objection"
+import mongoose from "mongoose";
 
+const userSchema = new mongoose.Schema({
+    fullName: {
+        type: String,
+        required: true,
+        minlength: 1,
+        maxlength: 255
+    },
+    email: {
+        type: String,
+        required: true,
+        minlength: 1,
+        maxlength: 255
+    },
+    validateToken: String,
+    passwordHash: String,
+    passwordSalt: String
+}, { timestamps: true });
 
-class User extends Model {
-  static tableName = "users"
-
-  static get jsonSchema() {
-    return {
-      type: "object",
-      required: [
-        "fullName",
-        "email",
-        "passwordHash",
-        "passwordSalt",
-      ],
-
-      properties: {
-        id: { type: "integer" },
-        fullName: { type: "string", minLength: 1, maxLength: 255 },
-        email: { type: "string", minLength: 1, maxLength: 255 },
-        validateToken: { type: "string" },
-        passwordHash: { type: "string" },
-        passwordSalt: { type: "string" },
-      },
-    }
-  }
-
-  get isActive() {
-    return this.validateToken === null
-  }
-
-  $formatJson(json) {
-    json = super.$formatJson(json)
-    delete json.passwordHash
-    delete json.passwordSalt
-    return json
-  }
+userSchema.methods.isActive = function() {
+    return this.validateToken === null;
 }
 
-export default User
+userSchema.methods.$formatJson = function(json) {
+    json = this.toObject(json);
+    delete json.passwordHash;
+    delete json.passwordSalt;
+    return json;
+}
+
+const User = mongoose.model('User', userSchema);
+
+export default User;

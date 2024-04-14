@@ -6,49 +6,63 @@ const env = process.env
 
 let dbConfig = {}
 
-if (!["production", "development", "test"].includes(env.NODE_ENV)) {
+if (!["production", "development", "fulldevAndProd"].includes(env.NODE_ENV)) {
   throw new Error("Invalid NODE_ENV")
 }
 
 if (env.NODE_ENV === "production") {
-  dbConfig = {
-    client: env.DB_CLIENT,
-    connection: {
-      host: env.DB_HOST,
-      port: env.DB_PORT,
-      user: env.DB_USER,
-      password: env.DB_PASSWORD,
-      database: env.DB_NAME,
-    },
-  }
-  mongoose.connect(env.MONGO_URL_DEV ||"mongodb+srv://ady243:soket1234@cluster0.qndpqpb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  mongoose.connect(env.MONGO_URL_DEV , {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .catch((error) => {
+    console.log("❌ Database connection failed", error)
+    process.exit(1)
+  })
+  .then(() => {
+    console.log("👌 Database mongo db connected")
+  });
+      
 }
 
 if (env.NODE_ENV === "development") {
   dbConfig = {
     client: env.DB_CLIENT,
     connection: {
-      host: env.DB_HOST_DEV || "localhost",
-      port: env.DB_PORT_DEV || 5432,
-      user: env.DB_USER_DEV || "postgres",
-      password: env.DB_PASSWORD_DEV || "password",
-      database: env.DB_NAME_DEV || "postgres",
+      host: env.DB_HOST_DEV ,
+      port: env.DB_PORT_DEV ,
+      user: env.DB_USER_DEV ,
+      password: env.DB_PASSWORD_DEV ,
+      database: env.DB_NAME_DEV ,
     },
   }
-  mongoose.connect(env.MONGO_URL_DEV || "mongodb+srv://ady243:soket1234@cluster0.qndpqpb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+  mongoose.connect(env.MONGO_URL_DEV , {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 .catch((error) => {
-  console.log("❌ Database connection failed", error)
+  console.log("❌ Database mongoDb connection failed", error)
   process.exit(1)
 })
 .then(() => {
   console.log("👌 Database mongo db connected")
-});
-    
-    
-    
+});        
+
+}
+
+if (env.NODE_ENV === "fulldevAndProd") {
+ 
+  mongoose.connect(env.MONGO_URL_DEV , {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.catch((error) => {
+  console.log("❌ Database mongoDb connection failed", error)
+  process.exit(1)
+})
+.then(() => {
+  console.log("👌 Database mongo db connected")
+});        
 
 }
 
