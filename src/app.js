@@ -25,7 +25,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Description de l\'API',
     },
-    servers: ['http://localhost:4000'],
+    servers: ['https://morpion-soket-back.vercel.app/'],
   },
   apis: ['./src/routes/*.js'],
 };
