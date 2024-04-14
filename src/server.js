@@ -1,5 +1,4 @@
-import knex from "knex"
-import { Model } from "objection"
+import mongoose from 'mongoose';
 import config from "./config/config.js"
 import app from "./app.js"
 
@@ -10,11 +9,7 @@ process.on("uncaughtException", (err) => {
 })
 
 // Connect the database
-const db = knex(config.db)
-Model.knex(db)
-
-// Check if the database is connected or not
-db.raw("select 1+1 as result")
+mongoose.connect(config.db.connection, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => {
     console.log("👌 Database connected")
   })

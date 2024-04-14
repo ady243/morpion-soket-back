@@ -2,7 +2,7 @@ import "dotenv/config"
 import * as yup from "yup"
 
 import securityConfig from "./security.config.js"
-import databaseConfig from "./database.config.js"
+import { connectToDatabase } from './database.config.js';
 
 const schema = yup.object().shape({
   environment: yup
@@ -11,20 +11,8 @@ const schema = yup.object().shape({
     .required(),
   port: yup.number().integer().positive().min(80).max(65535).required(),
   db: yup.object().shape({
-    client: yup.string().oneOf(["mysql", "mysql2", "pg"]).required(),
-    connection: yup.object().shape({
-      host: yup.string().required(),
-      port: yup.number().integer().positive().min(80).max(65535).required(),
-      user: yup.string().required(),
-      password: yup.string(),
-      database: yup.string().required(),
-    }),
-    migrations: yup.object().shape({
-      directory: yup.string().required(),
-    }),
-    seeds: yup.object().shape({
-      directory: yup.string(),
-    }),
+    client: yup.string().oneOf(["mongodb"]).required(),
+    connection: yup.string().required(),
   }),
   security: yup.object().shape({
     password: yup.object().shape({
@@ -43,15 +31,16 @@ const schema = yup.object().shape({
   }),
 })
 
-const env = process.env
-
 const data = {
-  environment: env.NODE_ENV,
-  port: env.APP_PORT,
-  db: databaseConfig,
+  environment: process.env.NODE_ENV,
+  port: process.env.APP_PORT,
+  db: {
+    client: "mongodb",
+    connection: process.env.MONGO_URL,
+  },
   security: securityConfig,
   webapp: {
-    origin: env.WEB_APP_ALLOWED_ORIGINS,
+    origin: [],
   },
 }
 
