@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production nodemon ./src/server.js",
+    "socket": "nodemon ./socket/socket.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/server.js",
     "test": "cross-env NODE_ENV=test npx knex migrate:rollback && npx knex migrate:latest && npx knex seed:run && mocha tests/**/*.js --exit",
     "knex": "knex",
@@ -23,6 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "@getbrevo/brevo": "^2.0.0-beta.4",
+    "socket.io": "^4.7.5",
     "axios": "^1.6.7",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
