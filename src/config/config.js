@@ -2,7 +2,7 @@ import "dotenv/config"
 import * as yup from "yup"
 
 import securityConfig from "./security.config.js"
-import { connectToDatabase } from './database.config.js';
+
 
 const schema = yup.object().shape({
   environment: yup
