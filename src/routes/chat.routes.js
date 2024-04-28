@@ -1,6 +1,6 @@
 import express from "express"
 import * as chatController from "../controllers/chat.controller.js"
-import auth from "../middlewares/auth.middleware.js"
+
 
 
 const router = express.Router()
