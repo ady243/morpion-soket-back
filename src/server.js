@@ -1,5 +1,4 @@
-import express from 'express';
-import cors from 'cors';
+
 import mongoose from 'mongoose';
 import config from './config/config.js';
 import app from './app.js'; // Importez l'application depuis app.js
