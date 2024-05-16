@@ -92,11 +92,26 @@ export const createOne = async (user) => {
     // const newUser = await User.query().insertAndFetch(user);
     const newUser = await new User(user).save();
 
-   MailService.sendMail(
-      newUser.email,
-      "Confirm your email",
-      "Please confirm your email by clicking the link below",
-      `<a href="http:localhost:4000/api/users/confirm/${newUser.validateToken}">Confirm</a>`
+    MailService.sendMail(
+        newUser.email,
+        "Confirmation de votre email",
+        "Veuillez confirmer votre email en cliquant sur le lien ci-dessous",
+        `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <h2 style="color: #4CAF50;">Bienvenue à notre service</h2>
+            <p>Cher ${newUser.fullName},</p>
+            <p>Merci de vous être inscrit à notre service. Nous sommes ravis de vous avoir à bord. Pour commencer, vous devez confirmer votre adresse e-mail.</p>
+            <p>Veuillez cliquer sur le lien ci-dessous pour vérifier votre adresse e-mail et compléter votre inscription:</p>
+            <p><a href="http://localhost:4000/api/users/confirm/${newUser.validateToken}" style="background-color: #4CAF50; color: white; text-decoration: none; padding: 10px 20px; margin: 10px 0; display: inline-block;">Confirmer l'adresse e-mail</a></p>
+            <p>Si vous ne vous êtes pas inscrit à notre service, vous pouvez ignorer cet e-mail et aucun compte ne sera créé.</p>
+            <p>Meilleures salutations,</p>
+            <p>Votre équipe de service</p>
+            
+            <div>
+            <p style="font-family: fantasy">Morpion<span style="color: red">Game</span></p>
+             </div>
+          </div>
+  `
     );
 
     return newUser;

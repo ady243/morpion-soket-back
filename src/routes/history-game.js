@@ -1,9 +1,8 @@
 import express from "express"
-import {getGameHistory} from "../controllers/getHistorySchema.js";
-import auth from "../middlewares/auth.middleware.js";
+import getGameHistory from "../controllers/"
 
 const router = express.Router()
 
-router.get("/:userId",auth,  getGameHistory)
+router.get("/:userId", auth,  getGameHistory)
 
 export default router
