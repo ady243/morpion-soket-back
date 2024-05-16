@@ -32,7 +32,7 @@ export const handleWebSocketConnections = (io) => {
         socket.on('disconnect', () => {
             console.log('Déconnexion WebSocket');
             // Supprimez l'association utilisateur-socket
-            delete userSocketMap[userId];
+     
         });
     });
 };

@@ -13,7 +13,7 @@ import messageRoute from "./routes/message.routes.js"
 
 import globalErrHandler from "./controllers/error.controller.js"
 import AppError from "./utils/appError.js"
-import { handleWebSocketConnections } from "./socket/morpion.js"
+
 
 
 const app = express()
@@ -34,14 +34,14 @@ const swaggerOptions = {
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-const environement = process.env.ORIGIN_URL || "http://localhost:5173";
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Allow Cross-Origin requests
 app.use(cors({
   origin:
-      "http://localhost:5173"
+      "*"
 }))
 // Set security HTTP headers
 app.use(helmet())
