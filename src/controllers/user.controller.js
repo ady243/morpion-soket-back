@@ -3,6 +3,7 @@ import * as userService from "../services/user.service.js"
 import AppError from "../utils/appError.js"
 import { checkRequiredFields } from "../utils/tools.js"
 
+
 export const getAllUsers = async (req, res, next) => {
   try {
     const {

@@ -65,6 +65,25 @@ export const signIn = async (email, password) => {
   }
 };
 
+export const getUserFromSocket = (socket) => {
+  const socketUser = socket.user;
+
+  if (!socketUser) {
+    throw new AppError(401, "fail", "Unauthorized");
+  }
+
+  return socketUser;
+};
+
+
+  export const getOpponentUserId = (userId) => {
+    if (userId === 'player1') {
+        return 'player2';
+    } else {
+        return 'player1';
+    }
+  };
+
 export const createOne = async (user) => {
   try {
     const existingUser = await findOneByField("email", user.email);
@@ -92,7 +111,8 @@ export const createOne = async (user) => {
 
     // const newUser = await User.query().insertAndFetch(user);
     const newUser = await new User(user).save();
-const hrefUrl = process.env.HREF_URL;
+// const hrefUrl = process.env.HREF_URL;
+  const hrefUrl = "http://localhost:4000";
     MailService.sendMail(
         newUser.email,
         "Confirmation de votre email",
@@ -114,6 +134,8 @@ const hrefUrl = process.env.HREF_URL;
           </div>
   `
     );
+
+    io.emit('start', newUser._id);
 
     return newUser;
   } catch (error) {
