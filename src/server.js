@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose';
 import config from './config/config.js';
-import app from './app.js'; // Importez l'application depuis app.js
+import app from './app.js'; 
 import * as http from 'http';
 import { Server } from 'socket.io';
 import { handleWebSocketConnections } from './socket/morpion.js';

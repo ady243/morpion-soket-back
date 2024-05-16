@@ -13,7 +13,7 @@ import messageRoute from "./routes/message.routes.js"
 
 import globalErrHandler from "./controllers/error.controller.js"
 import AppError from "./utils/appError.js"
-import { handleWebSocketConnections } from "./socket/morpion.js"
+
 
 
 const app = express()
