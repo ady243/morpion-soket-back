@@ -112,7 +112,7 @@ export const createOne = async (user) => {
     // const newUser = await User.query().insertAndFetch(user);
     const newUser = await new User(user).save();
 // const hrefUrl = process.env.HREF_URL;
-  const hrefUrl = "http://localhost:4000";
+  const hrefUrl = "https://morpion-soket-back.vercel.app";
     MailService.sendMail(
         newUser.email,
         "Confirmation de votre email",
