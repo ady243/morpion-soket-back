@@ -18,7 +18,7 @@ import AppError from "./utils/appError.js"
 
 const app = express()
 
-app.set('trust proxy', 1); // Ajoutez cette ligne
+app.set('trust proxy', 1); 
 
 // Options pour la documentation Swagger
 const swaggerOptions = {

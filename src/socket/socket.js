@@ -1,10 +1,9 @@
-
-import { use } from "chai";
 import { Server } from "socket.io";
 
 const io = new Server( process.env.SOCKET_PORT, {
     cors: {
-        origin: "http://localhost:5173",
+        // origin: "http://localhost:5173",
+        origin: "*",
     }
 });
 
@@ -27,7 +26,6 @@ io.on("connection", (socket) => {
 
     });
 
-    //add Message
     socket.on("addMessage", (message) => {
         const user = onlineUser.find((user) => user.userId === message.respientId);
         user && io.to(user.socketId).emit("getMessage", message);
