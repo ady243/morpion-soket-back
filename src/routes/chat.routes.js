@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post("/", chatController.createChat)
 router.get("/:userId",  chatController.findUserChat)
-router.post("/find/:firstId/:secondId", chatController.findChat)
+router.get("/find/:firstId/:secondId", chatController.findChat)
 
 
 export default router

@@ -68,7 +68,7 @@ router.post("/register", userController.createUser)
  *       200:
  *         description: Succès
  */
-router.route("/").get(auth, userController.getAllUsers)
+router.route("/").get( userController.getAllUsers)
 
 /**
  * @swagger
@@ -143,4 +143,6 @@ router
   .get(auth, userController.getUser)
   .put(auth, userController.updateUser)
   .delete(auth, userController.deleteUser)
+
+  router.get("/find/:userId", userController.findUser)
 export default router

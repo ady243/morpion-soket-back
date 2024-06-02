@@ -5,7 +5,7 @@ import app from './app.js';
 import * as http from 'http';
 import { Server } from 'socket.io';
 import { handleWebSocketConnections } from './socket/morpion.js';
-import { handleWebSocketConnectionsChat } from './socket/socket.js';
+
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down1...', err);
@@ -40,7 +40,7 @@ const io = new Server(server, {
 });
 
 handleWebSocketConnections(io);
-handleWebSocketConnectionsChat(io);
+
 
 server.listen(PORT, () => {
   console.log(`Environment: ${config.environment}`);

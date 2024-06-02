@@ -6,12 +6,6 @@ import { checkRequiredFields } from "../utils/tools.js"
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const {
-      session: {
-        user: { id: currentUserId },
-      },
-    } = req
-
     const users = await userService.findAll(req.query)
     res.status(200).json(users)
   } catch (error) {
@@ -175,6 +169,17 @@ export const confirmEmail = async (req, res, next) => {
     const { token } = req.params
 
     const user = await userService.confirmEmailUser(token)
+
+    res.status(200).json(user)
+  } catch (error) {
+    next(error)
+  }
+}
+export const findUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params
+
+    const user = await userService.findOneById(userId)
 
     res.status(200).json(user)
   } catch (error) {

@@ -5,13 +5,13 @@ export const createMessage = async (req, res) => {
     const {chatId, senderId, text} = req.body;
 
     try{
-        const newMessage = new Message({
+        const message = new Message({
             chatId,
             senderId,
             text
         });
 
-        const response = await newMessage.save();
+        const response = await message.save();
         res.status(201).json({message: response});
 
     }catch(error){
