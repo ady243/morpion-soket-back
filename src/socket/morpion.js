@@ -11,7 +11,7 @@ const generateRandomAnimalName = () => {
 
 export const handleWebSocketConnections = (io) => {
     io.on('connection', (socket) => {
-        console.log('New connection:', socket.id);
+   
 
         if (!players.X) {
             players.X = { id: socket.id, name: generateRandomAnimalName() };
@@ -33,7 +33,7 @@ export const handleWebSocketConnections = (io) => {
         });
 
         socket.on('disconnect', () => {
-            console.log('Disconnected:', socket.id);
+        
             if (players.X?.id === socket.id) {
                 delete players.X;
             } else if (players.O?.id === socket.id) {
@@ -54,9 +54,17 @@ export const handleWebSocketConnections = (io) => {
         //add message
         socket.on("sendMessage", (message)=>{
             const user = onlineUsers.find(user => user.userId === message.recipientId);
-
+        
             if(user){
+                const Notification = {
+                    from: message.senderId,
+                    to: message.recipientId,
+                    message: message.text,
+                    time: new Date()
+                };
                 io.to(user.socketId).emit("getMessage", message);
+                io.to(socket.id).emit("getNotifation", Notification);
+                io.emit('newMessage', message);
             }
         })
 
