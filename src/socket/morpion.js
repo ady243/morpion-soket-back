@@ -10,7 +10,6 @@ const generateRandomAnimalName = () => {
 
 export const handleWebSocketConnections = (io) => {
     io.on('connection', (socket) => {
-        // Assign a role to the connected player
         if (!players.X) {
             players.X = { id: socket.id, name: generateRandomAnimalName() };
             socket.emit('role', 'X');
@@ -23,15 +22,18 @@ export const handleWebSocketConnections = (io) => {
             return;
         }
 
-        // Emit the current players
+        socket.on('joinRoom', (room) => {
+            socket.join(room);
+            socket.emit('joinedRoom', room);
+        });
+
         socket.emit('players', players);
 
-        // Handle moves
         socket.on('move', (moveData) => {
             socket.broadcast.emit('move', moveData);
         });
 
-        // Handle disconnect
+   
         socket.on('disconnect', () => {
             if (players.X?.id === socket.id) {
                 delete players.X;
@@ -40,12 +42,11 @@ export const handleWebSocketConnections = (io) => {
             }
             socket.emit('players', players);
 
-            // Remove user from online users
             onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
             socket.emit("getOnlineUsers", onlineUsers);
         });
 
-        // Add new user to online users list
+       
         socket.on("addNewUser", (userId) => {
             if (!onlineUsers.some(user => user.userId === userId)) {
                 onlineUsers.push({
@@ -68,11 +69,7 @@ export const handleWebSocketConnections = (io) => {
                 };
 
                 socket.to(user.socketId).emit("getMessage", message);
-                
-        
                 socket.emit("getNotification", notification);
-
-               
                 io.emit('newMessage', message);
             }
         });
