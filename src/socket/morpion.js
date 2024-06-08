@@ -1,6 +1,6 @@
 const animalNames = ["Lion", "Tigre", "Ours", "Girafe", "Zèbre", "Hippopotame", "Kangourou", "Panda", "Gorille", "Crocodile"];
+let rooms = {};
 let players = {};
-let onlineUsers = [];
 
 const generateRandomAnimalName = () => {
     const randomIndex = Math.floor(Math.random() * animalNames.length);
@@ -23,6 +23,10 @@ export const handleWebSocketConnections = (io) => {
         }
 
         socket.on('joinRoom', (room) => {
+            if (!rooms[room]) {
+                rooms[room] = { name: generateRandomAnimalName(), players: [] };
+            }
+            rooms[room].players.push(socket.id);
             socket.join(room);
             socket.emit('joinedRoom', room);
         });
