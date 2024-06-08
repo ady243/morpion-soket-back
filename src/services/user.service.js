@@ -143,20 +143,19 @@ export const createOne = async (user) => {
   }
 };
 
-export const confirmEmailUser = async (token) => {
+export const confirmEmailUser = async (req, res) => {
   try {
+    const token = req.params.token;
     const user = await User.findOne({ validateToken: token });
 
     if (!user) {
       throw new AppError(404, "fail", "User not found");
     }
 
-    user.validateToken = ""
+    user.validateToken = "";
+    await User.findByIdAndUpdate(user.id, user, { new: true });
 
-    const newUser = await User.findByIdAndUpdate(user.id, user, { new: true });
-    
-
-    return newUser;
+    res.redirect('https://morpion-pi.vercel.app/login');
   } catch (error) {
     throw error;
   }

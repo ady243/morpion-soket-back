@@ -1,6 +1,7 @@
 import express from "express"
 import * as userController from "../controllers/user.controller.js"
 import auth from "../middlewares/auth.middleware.js"
+import User from "../db/models/user.model.js"
 
 const router = express.Router()
 
@@ -96,7 +97,25 @@ router.get("/me", auth, userController.getCurrentUser)
  *       200:
  *         description: Succès
  */
-router.get("/confirm/:token", userController.confirmEmail)
+router.get('/confirm/:token', async (req, res) => {
+  try {
+    const token = req.params.token;
+    const user = await User.findOne({ validateToken: token });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    user.validateToken = "";
+    user.emailVerified = true; 
+
+    await user.save();
+
+    res.redirect('https://morpion-pi.vercel.app/login');
+  } catch (error) {
+    res.status(500).send('Something went wrong');
+  }
+});
 
 /**
  * @swagger

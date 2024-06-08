@@ -67,13 +67,12 @@ export const handleWebSocketConnections = (io) => {
                     time: new Date()
                 };
 
-                // Émettre le nouveau message à l'utilisateur destinataire
                 socket.to(user.socketId).emit("getMessage", message);
                 
-                // Émettre une notification au client émetteur
+        
                 socket.emit("getNotification", notification);
 
-                // Émettre le nouveau message à tous les clients connectés
+               
                 io.emit('newMessage', message);
             }
         });
