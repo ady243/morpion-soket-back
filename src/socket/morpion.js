@@ -1,9 +1,8 @@
 const animalNames = ["Lion", "Tigre", "Ours", "Girafe", "Zèbre", "Hippopotame", "Kangourou", "Panda", "Gorille", "Crocodile"];
-let players = {}; 
+let players = {};
 let onlineUsers = [];
 
 const generateRandomAnimalName = () => {
-
     const randomIndex = Math.floor(Math.random() * animalNames.length);
     const animalName = animalNames.splice(randomIndex, 1)[0];
     return animalName;
@@ -11,8 +10,7 @@ const generateRandomAnimalName = () => {
 
 export const handleWebSocketConnections = (io) => {
     io.on('connection', (socket) => {
-   
-
+        // Assign a role to the connected player
         if (!players.X) {
             players.X = { id: socket.id, name: generateRandomAnimalName() };
             socket.emit('role', 'X');
@@ -25,53 +23,60 @@ export const handleWebSocketConnections = (io) => {
             return;
         }
 
+        // Emit the current players
+        socket.emit('players', players);
 
-        io.emit('players', players);
-
+        // Handle moves
         socket.on('move', (moveData) => {
             socket.broadcast.emit('move', moveData);
         });
 
+        // Handle disconnect
         socket.on('disconnect', () => {
-        
             if (players.X?.id === socket.id) {
                 delete players.X;
             } else if (players.O?.id === socket.id) {
                 delete players.O;
             }
-            io.emit('players', players);
+            socket.emit('players', players);
+
+            // Remove user from online users
+            onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+            socket.emit("getOnlineUsers", onlineUsers);
         });
-        socket.on("addNewUser", (userId)=>{
+
+        // Add new user to online users list
+        socket.on("addNewUser", (userId) => {
             if (!onlineUsers.some(user => user.userId === userId)) {
                 onlineUsers.push({
                     userId,
                     socketId: socket.id
                 });
             }
-            io.emit("getOnlineUsers", onlineUsers);
-        })
+            socket.emit("getOnlineUsers", onlineUsers);
+        });
 
-        //add message
-        socket.on("sendMessage", (message)=>{
+        socket.on("sendMessage", (message) => {
             const user = onlineUsers.find(user => user.userId === message.recipientId);
-        
-            if(user){
-                const Notification = {
+
+            if (user) {
+                const notification = {
                     from: message.senderId,
                     to: message.recipientId,
                     message: message.text,
                     time: new Date()
                 };
-                io.to(user.socketId).emit("getMessage", message);
-                io.to(socket.id).emit("getNotifation", Notification);
+
+                // Émettre le nouveau message à l'utilisateur destinataire
+                socket.to(user.socketId).emit("getMessage", message);
+                
+                // Émettre une notification au client émetteur
+                socket.emit("getNotification", notification);
+
+                // Émettre le nouveau message à tous les clients connectés
                 io.emit('newMessage', message);
             }
-        })
+        });
 
-        socket.on("disconnect",()=>{
-            onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
-            io.emit("getOnlineUsers", onlineUsers);
-        })
-        
     });
 };
