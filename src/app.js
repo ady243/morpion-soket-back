@@ -41,7 +41,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Allow Cross-Origin requests
 app.use(cors({
   origin:
-      "*"
+      "*",
+     methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['X-Requested-With', 'Content-Type'],
+    credentials: true
 }))
 // Set security HTTP headers
 app.use(helmet())

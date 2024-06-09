@@ -205,3 +205,18 @@ export const deleteOne = async (userId) => {
     throw error;
   }
 };
+
+export const recordWin = async (userId) => {
+  try {
+      const user = await User.findById(userId);
+      if (user) {
+          user.wins += 1; 
+          await user.save();
+          return user.wins;
+      } else {
+          throw new Error("User not found");
+      }
+  } catch (error) {
+      throw error;
+  }
+}
