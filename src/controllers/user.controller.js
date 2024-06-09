@@ -1,4 +1,5 @@
 import * as userService from "../services/user.service.js"
+import User from "../db/models/user.model.js"
 
 import AppError from "../utils/appError.js"
 import { checkRequiredFields } from "../utils/tools.js"
@@ -186,3 +187,28 @@ export const findUser = async (req, res, next) => {
     next(error)
   }
 }
+
+export const recordWin = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const wins = await userService.recordWin(userId);
+    res.status(200).json({ wins });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserWins = async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    if (user) {
+      res.status(200).json({ wins: user.wins });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
