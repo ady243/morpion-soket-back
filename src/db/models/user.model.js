@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
         minlength: 1,
         maxlength: 255
     },
+    gamesWon: {
+        type: Number,
+        default: 0
+    },
     validateToken: String,
     passwordHash: String,
     passwordSalt: String

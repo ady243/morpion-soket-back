@@ -164,4 +164,5 @@ router
   .delete(auth, userController.deleteUser)
 
   router.get("/find/:userId", userController.findUser)
+  router.post("/win", userController.handleWin);
 export default router
