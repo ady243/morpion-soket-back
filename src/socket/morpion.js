@@ -1,6 +1,7 @@
 const animalNames = ["Lion", "Tigre", "Ours", "Girafe", "Zèbre", "Hippopotame", "Kangourou", "Panda", "Gorille", "Crocodile"];
 let rooms = {};
 let players = {};
+let onlineUsers = [];
 
 const generateRandomAnimalName = () => {
     const randomIndex = Math.floor(Math.random() * animalNames.length);
