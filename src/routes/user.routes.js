@@ -165,4 +165,14 @@ router
 
   router.get("/find/:userId", userController.findUser)
   router.post("/win", userController.handleWin);
+  router.get("/:id/wins", async (req, res, next) => {
+    try {
+      const userId = req.params.id;
+      const user = await userService.findOneById(userId);
+      const wins = user ? user.wins : 0;
+      res.status(200).json({ wins });
+    } catch (error) {
+      next(error);
+    }
+  });
 export default router
